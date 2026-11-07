@@ -1,0 +1,23 @@
+{
+  "cleanUrls": false,
+  "rewrites": [
+    { "source": "/index.php", "destination": "/index.html" },
+    { "source": "/galerie.php", "destination": "/galerie.html" },
+    { "source": "/projets.php", "destination": "/projets.html" },
+    { "source": "/informations.php", "destination": "/informations.html" },
+    { "source": "/contact.php", "destination": "/contact.html" },
+    { "source": "/devenir-membre.php", "destination": "/devenir-membre.html" },
+    { "source": "/connexion.php", "destination": "/connexion.html" },
+    { "source": "/mot-de-passe-oublie.php", "destination": "/mot-de-passe-oublie.html" }
+  ],
+  "headers": [
+    {
+      "source": "/uploads/galerie/(.*)\\.mp4",
+      "headers": [
+        { "key": "Content-Type", "value": "video/mp4" },
+        { "key": "Accept-Ranges", "value": "bytes" },
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}
