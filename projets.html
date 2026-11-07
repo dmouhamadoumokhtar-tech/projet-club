@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Scientifique - Nos projets scientifiques</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Outfit (Titres modernes) & Space Mono (Tech/Code) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Custom Style Masterclass (Versionned to force refresh) -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Fail-safe styles in case CSS fails to load -->
+    <style>
+        img { max-width: 100%; height: auto; }
+        .logo-container img { max-height: 50px; }
+        body { background-color: #020c1b; color: #ccd6f6; } /* Match theme */
+    </style>
+</head>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+        
+    <!-- Navbar Masterclass (Glassmorphism + Sticky) -->
+    <header class="fixed-top header-glass">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center gap-2 logotype" href="index.html">
+                    <div class="logo-container">
+                        <img src="logo.jpg" alt="Logo">
+                    </div>
+                    <span class="brand-text">CLUB<span class="text-accent">SCIENTIFIQUE</span></span>
+                </a>
+                
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarMain">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0 nav-pills-glass">
+                        <li class="nav-item">
+                            <a class="nav-link " href="index.html">Accueil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="projets.html">Projets</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="galerie.html">Galerie</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="informations.html">Infos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="contact.html">Contact</a>
+                        </li>
+                    </ul>
+                    
+                    <div class="d-flex align-items-center gap-2">
+                                                    <a href="connexion.html" class="btn btn-sm btn-glass-primary">
+                                <i class="fas fa-fingerprint me-2"></i>Connexion
+                            </a>
+                            <a href="devenir-membre.html" class="btn btn-sm btn-accent">
+                                Rejoindre
+                            </a>
+                                            </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Spacer pour éviter que le contenu ne soit caché par la navbar fixe -->
+    <div style="height: 80px;"></div> 
+    
+    <main class="main-content flex-grow-1">
+        
+        
+
+    <div class="container py-5" style="margin-top: 60px;">
+        <h1 class="page-title-glass mb-4">Nos <span class="text-accent">Projets</span></h1>
+        
+        <p class="lead text-center text-secondary mb-5" style="max-width: 700px; margin: 0 auto;">
+            Découvrez les projets scientifiques innovants sur lesquels travaillent nos membres.
+        </p>
+        
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                                    <div class="col">
+                        <div class="card-glass h-100 p-0 overflow-hidden d-flex flex-column group-hover-effect">
+                            <div class="card-body p-4 d-flex flex-column h-100">
+                                <div class="text-accent mb-3 text-mono small">
+                                    <i class="fas fa-calendar-alt me-1"></i> 27/01/2026                                </div>
+                                <h4 class="card-title text-white">projet de l&amp;#039;année</h4>
+                                <p class="text-secondary flex-grow-1">
+                                    📌 Réunion du Club Scientifique – CSLMDB
+Ce mardi 27 janvier 2026 à 16h30, le Club Scientifique du Lycée Maba Diakhou Bâ a tenu une réunion...                                </p>
+                                <a href="projets.html?id=2" class="btn btn-glass w-100 mt-3 align-self-end">
+                                    En savoir plus <i class="fas fa-arrow-right ms-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                            </div>
+            </div>
+
+
+    </main>
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5>Club Scientifique</h5>
+                    <p class="text-muted">Exploration, découverte et innovation</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Contact</h5>
+                    <p><i class="fas fa-envelope me-2"></i>contact@cslmdb.com(pas encore dispo)</p>
+                    <p><i class="fas fa-phone me-2"></i>+221 775889711</p>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="mb-0">&copy; 2026 CSLMDB - Tous droits réservés</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- WhatsApp Floating Button -->
+    <a href="https://chat.whatsapp.com/BSFSXUpOibU4TiYzw2WKTN" class="whatsapp-btn" target="_blank" title="Rejoindre le groupe WhatsApp">
+        <div class="whatsapp-pulse"></div>
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Script JavaScript principal -->
+    <script src="js/script.js"></script>
+
+    
+
+<script>
+const PROJETS_DATA = {"2": {"id": 2, "titre": "projet de l'année", "description": "📌 Réunion du Club Scientifique – CSLMDB\nCe mardi 27 janvier 2026 à 16h30, le Club Scientifique du Lycée Maba Diakhou Bâ a tenu une réunion de planification axée sur l’organisation des activités du club et la préparation stratégique de la JDAS 2026.\nLes échanges ont porté sur : 🔹 Le renforcement des projets scientifiques et numériques\n🔹 Les futures activités et démonstrations pratiques\n🔹 La participation aux concours scientifiques\n🔹 L’anticipation des épreuves de la JDAS (Maths, PC, SVT, Codage, SIG…)\nLe club poursuit son engagement pour développer l’esprit scientifique, les compétences numériques et la culture technologique chez les élèves.\n🚀 La science en action, l’avenir en préparation !\n#ClubScientifique #CSLMDB #JDAS2026 #Science #Innovation #Éducation", "date": "27/01/2026"}};
+document.addEventListener("DOMContentLoaded", function() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    if (id && PROJETS_DATA[id]) {
+        const p = PROJETS_DATA[id];
+        const container = document.querySelector("main .container");
+        if (container) {
+            const paras = p.description.split("\n").filter(l => l.trim() !== "").map(l => `<p>${l.replace(/</g,"&lt;")}</p>`).join("");
+            container.innerHTML = `
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="projets.html" class="text-accent text-decoration-none">Nos projets</a></li>
+                        <li class="breadcrumb-item active text-secondary" aria-current="page">${p.titre}</li>
+                    </ol>
+                </nav>
+                <div class="content-glass-box">
+                    <div class="d-flex align-items-center justify-content-between mb-4 border-bottom border-secondary pb-3" style="border-color: rgba(255,255,255,0.1) !important;">
+                        <h1 class="h2 text-white mb-0">${p.titre}</h1>
+                        <span class="text-accent text-mono"><i class="fas fa-calendar-alt me-2"></i>${p.date}</span>
+                    </div>
+                    <div class="text-secondary" style="font-size: 1.1rem; line-height: 1.8;">
+                        ${paras}
+                    </div>
+                    <div class="mt-5 pt-3 border-top" style="border-color: rgba(255,255,255,0.1) !important;">
+                        <h4 class="text-white mb-3">Participer à ce projet ?</h4>
+                        <a href="contact.html" class="btn btn-accent">Nous contacter</a>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="projets.html" class="btn btn-glass"><i class="fas fa-arrow-left me-2"></i> Retour à la liste</a>
+                </div>
+            `;
+        }
+    }
+});
+</script>
+
+</body>
+</html>
