@@ -553,10 +553,7 @@ require_once '../includes/header.php';
                     <?php foreach ($images as $image): ?>
                         <div class="gallery-item">
                             <?php if ($image['type'] === 'video'): ?>
-                                <video src="../uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" class="object-fit-cover w-100" style="height: 200px;" muted></video>
-                                <div class="position-absolute top-50 start-50 translate-middle text-white">
-                                    <i class="fas fa-play-circle fa-3x" style="opacity: 0.8;"></i>
-                                </div>
+                                <video src="../uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>#t=0.5" class="object-fit-cover w-100" style="height: 200px; background: #0a192f;" muted playsinline preload="metadata" controls></video>
                             <?php else: ?>
                                 <img src="../uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
                                      alt="<?php echo htmlspecialchars($image['titre']); ?>">

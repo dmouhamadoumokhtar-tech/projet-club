@@ -18,16 +18,34 @@ try {
     $stmt->execute();
     $categories = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     
+    // Toutes les images/vidéos pour l'onglet "Toutes"
+    $toutes_images = [];
+
     // Pour chaque catégorie, récupérer ses images
     foreach ($categories as $i => $categorie) {
         $stmt = $mysqli->prepare("SELECT * FROM galerie WHERE categorie_id = ? ORDER BY date_ajout DESC");
         $stmt->bind_param("i", $categorie['id']);
         $stmt->execute();
-        $categories[$i]['images'] = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $items = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $items_valides = [];
+        foreach ($items as $item) {
+            if (!empty($item['fichier']) && file_exists(__DIR__ . '/uploads/galerie/' . $item['fichier'])) {
+                $item['categorie_nom'] = $categorie['nom'];
+                $items_valides[] = $item;
+                $toutes_images[] = $item;
+            }
+        }
+        $categories[$i]['images'] = $items_valides;
     }
+
+    // Trier "Toutes" par date d'ajout décroissante
+    usort($toutes_images, function($a, $b) {
+        return strtotime($b['date_ajout']) <=> strtotime($a['date_ajout']);
+    });
 } catch (Exception $e) {
     // En cas d'erreur, initialiser un tableau vide
     $categories = [];
+    $toutes_images = [];
 }
 
 // Titre de la page pour l'affichage dans l'en-tête
@@ -37,8 +55,9 @@ $titre_page = "Galerie";
 require_once 'includes/header.php';
 ?>
 
-<!-- Ajout des styles GLightbox -->
+<!-- Ajout des styles GLightbox et Plyr (pour le lecteur vidéo) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css" />
 <style>
 .gallery-container {
     margin-top: 2rem;
@@ -82,12 +101,24 @@ require_once 'includes/header.php';
     background-color: #007bff;
     color: white;
 }
+.video-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(2, 12, 27, 0.75);
+    color: #64ffda;
+    border: 1px solid rgba(100, 255, 218, 0.4);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    z-index: 2;
+}
 </style>
 
 <div class="container py-5" style="margin-top: 60px;">
     <h1 class="page-title-glass mb-4">Galerie <span class="text-accent">Immersive</span></h1>
     <p class="lead text-center text-secondary mb-5" style="max-width: 700px; margin: 0 auto;">
-        Découvrez en images les activités et projets du Club Scientifique.
+        Découvrez en images et en vidéos les activités et projets du Club Scientifique.
     </p>
 
     <?php if (empty($categories)): ?>
@@ -112,36 +143,37 @@ require_once 'includes/header.php';
             <!-- Toutes les catégories -->
             <div class="tab-pane fade show active" id="all" role="tabpanel">
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 gallery-container">
-                    <?php foreach ($categories as $categorie): ?>
-                        <?php foreach ($categorie['images'] as $image): ?>
-                            <div class="col">
-                                <a href="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
-                                   class="card-glass d-block p-2 h-100 text-decoration-none gallery-item glightbox" 
-                                   data-gallery="gallery1"
-                                   data-type="<?php echo $image['type'] === 'video' ? 'video' : 'image'; ?>"
-                                   data-effect="fade"
-                                   data-caption="<?php echo htmlspecialchars($image['titre']); ?>">
-                                    <div style="height: 250px; overflow: hidden; border-radius: 8px; position: relative;">
-                                        <?php if ($image['type'] === 'video'): ?>
-                                            <video src="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
-                                                   class="w-100 h-100 object-fit-cover" muted></video>
-                                            <div class="position-absolute top-50 start-50 translate-middle text-white">
-                                                <i class="fas fa-play-circle fa-4x" style="opacity: 0.8; text-shadow: 0 2px 4px rgba(0,0,0,0.3);"></i>
-                                            </div>
-                                        <?php else: ?>
-                                            <img src="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
-                                                 alt="<?php echo htmlspecialchars($image['titre']); ?>"
-                                                 loading="lazy"
-                                                 style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;">
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="mt-3 text-center">
-                                        <h5 class="text-white mb-1" style="font-size: 1.1rem;"><?php echo htmlspecialchars($image['titre']); ?></h5>
-                                        <small class="text-accent text-mono"><?php echo htmlspecialchars($categorie['nom']); ?></small>
-                                    </div>
-                                </a>
-                            </div>
-                        <?php endforeach; ?>
+                    <?php foreach ($toutes_images as $image): ?>
+                        <div class="col">
+                            <a href="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
+                               class="card-glass d-block p-2 h-100 text-decoration-none gallery-item glightbox" 
+                               data-gallery="gallery-all"
+                               data-type="<?php echo $image['type'] === 'video' ? 'video' : 'image'; ?>"
+                               data-effect="fade"
+                               data-title="<?php echo htmlspecialchars($image['titre']); ?>"
+                               data-description="<?php echo htmlspecialchars($image['description'] ?? ''); ?>">
+                                <div style="height: 250px; overflow: hidden; border-radius: 8px; position: relative; background: #0a192f;">
+                                    <?php if ($image['type'] === 'video'): ?>
+                                        <span class="video-badge"><i class="fas fa-video me-1"></i>Vidéo</span>
+                                        <video src="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>#t=0.5" 
+                                               class="w-100 h-100 object-fit-cover preview-video"
+                                               muted playsinline preload="metadata"></video>
+                                        <div class="position-absolute top-50 start-50 translate-middle text-white pointer-events-none">
+                                            <i class="fas fa-play-circle fa-4x" style="opacity: 0.9; color: #64ffda; text-shadow: 0 4px 12px rgba(0,0,0,0.6);"></i>
+                                        </div>
+                                    <?php else: ?>
+                                        <img src="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
+                                             alt="<?php echo htmlspecialchars($image['titre']); ?>"
+                                             loading="lazy"
+                                             style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;">
+                                    <?php endif; ?>
+                                </div>
+                                <div class="mt-3 text-center">
+                                    <h5 class="text-white mb-1" style="font-size: 1.1rem;"><?php echo htmlspecialchars($image['titre']); ?></h5>
+                                    <small class="text-accent text-mono"><?php echo htmlspecialchars($image['categorie_nom']); ?></small>
+                                </div>
+                            </a>
+                        </div>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -154,16 +186,19 @@ require_once 'includes/header.php';
                             <div class="col">
                                 <a href="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
                                    class="card-glass d-block p-2 h-100 text-decoration-none gallery-item glightbox" 
-                                   data-gallery="gallery<?php echo $categorie['id']; ?>"
+                                   data-gallery="gallery-cat-<?php echo $categorie['id']; ?>"
                                    data-type="<?php echo $image['type'] === 'video' ? 'video' : 'image'; ?>"
                                    data-effect="fade"
-                                   data-caption="<?php echo htmlspecialchars($image['titre']); ?>">
-                                    <div style="height: 250px; overflow: hidden; border-radius: 8px; position: relative;">
+                                   data-title="<?php echo htmlspecialchars($image['titre']); ?>"
+                                   data-description="<?php echo htmlspecialchars($image['description'] ?? ''); ?>">
+                                    <div style="height: 250px; overflow: hidden; border-radius: 8px; position: relative; background: #0a192f;">
                                         <?php if ($image['type'] === 'video'): ?>
-                                            <video src="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
-                                                   class="w-100 h-100 object-fit-cover" muted></video>
-                                            <div class="position-absolute top-50 start-50 translate-middle text-white">
-                                                <i class="fas fa-play-circle fa-4x" style="opacity: 0.8; text-shadow: 0 2px 4px rgba(0,0,0,0.3);"></i>
+                                            <span class="video-badge"><i class="fas fa-video me-1"></i>Vidéo</span>
+                                            <video src="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>#t=0.5" 
+                                                   class="w-100 h-100 object-fit-cover preview-video"
+                                                   muted playsinline preload="metadata"></video>
+                                            <div class="position-absolute top-50 start-50 translate-middle text-white pointer-events-none">
+                                                <i class="fas fa-play-circle fa-4x" style="opacity: 0.9; color: #64ffda; text-shadow: 0 4px 12px rgba(0,0,0,0.6);"></i>
                                             </div>
                                         <?php else: ?>
                                             <img src="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
@@ -186,7 +221,8 @@ require_once 'includes/header.php';
     <?php endif; ?>
 </div>
 
-<!-- Scripts GLightbox -->
+<!-- Scripts Plyr et GLightbox -->
+<script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -195,11 +231,33 @@ document.addEventListener('DOMContentLoaded', function() {
         touchNavigation: true,
         loop: true,
         autoplayVideos: true,
+        plyr: {
+            css: 'https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css',
+            js: 'https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js',
+            config: {
+                ratio: '16:9',
+                muted: false,
+                hideControls: true
+            }
+        },
         onOpen: () => {
             document.body.style.overflow = 'hidden';
         },
         onClose: () => {
             document.body.style.overflow = 'auto';
+        }
+    });
+
+    // Aperçu vidéo au survol sur ordinateur
+    document.querySelectorAll('.gallery-item').forEach(card => {
+        const video = card.querySelector('video.preview-video');
+        if (video) {
+            card.addEventListener('mouseenter', () => {
+                video.play().catch(() => {});
+            });
+            card.addEventListener('mouseleave', () => {
+                video.pause();
+            });
         }
     });
 });
