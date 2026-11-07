@@ -1,0 +1,600 @@
+/*
+ * MASTERCLASS THEME - CLUB SCIENTIFIQUE
+ * Concept: Dark Science, Glassmorphism, Neon Accents, 3D
+ */
+
+/* ---------------------------------------------------- */
+/* --- 1. VARIABLES & CONFIGURATION --- */
+/* ---------------------------------------------------- */
+:root {
+    /* -- Palette Dark Science -- */
+    --bg-deep: #020c1b;
+    /* Fond ultra sombre, presque noir */
+    --bg-card: rgba(17, 34, 64, 0.75);
+    /* Bleu nuit délavé pour les cartes */
+    --bg-glass: rgba(10, 25, 47, 0.7);
+    /* Verre sombre pour navbar */
+
+    /* -- Accents Néons -- */
+    --accent-cyan: #64ffda;
+    /* Cyan électrique - Principal activateur */
+    --accent-blue: #57cbff;
+    /* Bleu ciel technologique */
+    --accent-purple: #bd93f9;
+    /* Violet cosmos pour la profondeur */
+
+    /* -- Typographie -- */
+    --font-heading: 'Outfit', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+    --text-primary: #ffffff;
+    /* Blanc pur pour le texte principal */
+    --text-secondary: #d1d5db;
+    /* Gris très clair (presque blanc) pour les textes secondaires */
+
+    /* -- Effets -- */
+    --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+    --neon-glow: 0 0 10px rgba(100, 255, 218, 0.3);
+    --transition-smooth: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+/* ---------------------------------------------------- */
+/* --- 2. GLOBAL RESET & BASE --- */
+/* ---------------------------------------------------- */
+body {
+    background-color: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    line-height: 1.6;
+    overflow-x: hidden;
+    /* Évite les scrollbars horizontales dues aux anims */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--text-primary);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+h1,
+.display-txt {
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+a {
+    color: var(--accent-cyan);
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+
+a:hover {
+    color: var(--accent-blue);
+    text-shadow: var(--neon-glow);
+}
+
+.text-accent {
+    color: var(--accent-cyan) !important;
+}
+
+.text-mono {
+    font-family: var(--font-mono);
+}
+
+.text-muted {
+    color: var(--text-secondary) !important;
+}
+
+/* ---------------------------------------------------- */
+/* --- 3. COMPONENTS: NAVBAR & HEADER --- */
+/* ---------------------------------------------------- */
+.header-glass {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(2, 12, 27, 0.85);
+    border-bottom: var(--glass-border);
+    padding: 1rem 0;
+    transition: var(--transition-smooth);
+}
+
+.navbar-brand .logotype {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.logo-container img {
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-cyan);
+    padding: 2px;
+    background: var(--bg-deep);
+}
+
+/* Navigation Links Style */
+.nav-pills-glass .nav-link {
+    color: var(--text-secondary) !important;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    margin: 0 0.5rem;
+    position: relative;
+    padding: 0.5rem 1rem;
+}
+
+.nav-pills-glass .nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--accent-cyan);
+    transition: var(--transition-smooth);
+}
+
+.nav-pills-glass .nav-link:hover::before,
+.nav-pills-glass .nav-link.active::before {
+    width: 100%;
+}
+
+.nav-pills-glass .nav-link:hover,
+.nav-pills-glass .nav-link.active {
+    color: var(--accent-cyan) !important;
+}
+
+/* Boutons Navigation */
+.btn-glass {
+    background: rgba(100, 255, 218, 0.1);
+    color: var(--accent-cyan);
+    border: 1px solid var(--accent-cyan);
+    font-family: var(--font-mono);
+}
+
+.btn-glass:hover {
+    background: rgba(100, 255, 218, 0.2);
+    box-shadow: var(--neon-glow);
+    color: var(--accent-cyan);
+}
+
+.btn-glass-primary {
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-glass-primary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.btn-accent {
+    background: var(--accent-cyan);
+    color: var(--bg-deep);
+    font-weight: 700;
+    border: none;
+}
+
+.btn-accent:hover {
+    background: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(100, 255, 218, 0.4);
+}
+
+/* ---------------------------------------------------- */
+/* --- 4. HERO SECTION (CANVAS) --- */
+/* ---------------------------------------------------- */
+#hero-canvas-container {
+    position: relative;
+    width: 100%;
+    height: 85vh;
+    /* Hauteur immersive */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #112240 0%, #020c1b 100%);
+}
+
+#bg-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    /* Au-dessus du canvas */
+    text-align: center;
+    max-width: 900px;
+    padding: 0 20px;
+}
+
+.hero-super-title {
+    font-family: var(--font-mono);
+    color: var(--accent-cyan);
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    border: 1px solid var(--accent-cyan);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background: rgba(100, 255, 218, 0.1);
+}
+
+.hero-title {
+    font-size: 4.5rem;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    text-shadow: 0 10px 30px rgba(2, 12, 27, 0.7);
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto 2.5rem auto;
+}
+
+/* ---------------------------------------------------- */
+/* --- 5. SWIPER 3D CAROUSEL (FIXES) --- */
+/* ---------------------------------------------------- */
+.swiper-3d-container {
+    padding: 2rem 0 4rem;
+    /* Adjusted padding */
+    perspective: 1000px;
+    overflow: hidden;
+    /* Prevent overflow explosion */
+}
+
+/* Force dimensions for 3D Swiper to work correctly */
+.swiper {
+    width: 100%;
+    max-width: 1000px;
+    /* Constrain max width */
+    margin: 0 auto;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.swiper-slide {
+    background-position: center;
+    background-size: cover;
+    /* width: 300px !important; REMOVED to allow Swiper auto-sizing */
+    height: 400px;
+    /* Fixed height is usually fine/good for consistency */
+    border-radius: 15px;
+    background: var(--bg-card);
+    border: var(--glass-border);
+    overflow: hidden;
+    /* Ensure content stays inside */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    /* Needed for absolute positioning of children */
+}
+
+/* Image handling */
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Cover is key for varying sizes */
+    transition: transform 0.5s ease;
+}
+
+.swiper-slide:hover img {
+    transform: scale(1.1);
+}
+
+.slide-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(2, 12, 27, 0.95), transparent);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 10;
+}
+
+.swiper-slide:hover .slide-content {
+    transform: translateY(0);
+}
+
+.swiper-pagination-bullet {
+    background: var(--text-secondary);
+    opacity: 0.5;
+}
+
+.swiper-pagination-bullet-active {
+    background: var(--accent-cyan);
+    opacity: 1;
+}
+
+/* ---------------------------------------------------- */
+/* --- 6. GLASS CARDS (Hover 3D) --- */
+/* ---------------------------------------------------- */
+.card-glass {
+    background: var(--bg-card);
+    backdrop-filter: blur(5px);
+    border: var(--glass-border);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: var(--transition-smooth);
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Glow Effect on Hover */
+.card-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.06), transparent 40%);
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    /* Let clicks pass through */
+}
+
+.card-glass:hover::before {
+    opacity: 1;
+}
+
+.card-glass:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 30px -15px rgba(2, 12, 27, 0.7);
+    border-color: var(--accent-cyan);
+}
+
+.card-icon {
+    font-size: 3rem;
+    color: var(--accent-cyan);
+    margin-bottom: 1.5rem;
+}
+
+.card-title {
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+/* ---------------------------------------------------- */
+/* --- 7. UTILITIES & ANIMATIONS --- */
+/* ---------------------------------------------------- */
+.section-title,
+.page-title-glass {
+    /* Added page-title-glass shared style */
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+}
+
+.section-title::after,
+.page-title-glass::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: var(--accent-cyan);
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+.content-glass-box {
+    /* Generic box for pages content */
+    background: rgba(17, 34, 64, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.container-glass {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Breadcrumb Styling */
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+}
+
+.breadcrumb-item a {
+    color: var(--accent-cyan);
+}
+
+.breadcrumb-item.active {
+    color: var(--text-secondary);
+}
+
+/* Tabs Styling (Galerie) */
+.nav-tabs {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-tabs .nav-link {
+    color: var(--text-secondary);
+    border: none;
+    background: transparent;
+    font-family: var(--font-mono);
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--accent-cyan);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--accent-cyan);
+    background: rgba(100, 255, 218, 0.05);
+    border-bottom: 2px solid var(--accent-cyan);
+}
+
+/* Alerts Glass */
+.glass-alert {
+    background: rgba(100, 255, 218, 0.1);
+    border: 1px solid var(--accent-cyan);
+    color: var(--accent-cyan);
+}
+
+/* Form Controls Glass */
+/* Form Controls Glass */
+.form-control-glass {
+    background-color: rgba(255, 255, 255, 0.05);
+    /* Use background-color to allow separate background-image (arrow) for selects */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    /* Pure white text */
+    backdrop-filter: blur(5px);
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
+}
+
+.form-control-glass:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+    color: #ffffff;
+}
+
+.form-control-glass::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    /* Much brighter placeholder */
+    font-size: 0.9rem;
+}
+
+/* Fix for Select Dropdowns */
+select.form-control-glass {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2364ffda' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    appearance: none;
+    /* Remplacer l'apparence par défaut */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 2.5rem;
+    /* Espace pour la flèche */
+}
+
+select.form-control-glass option {
+    background-color: var(--bg-deep);
+    /* Fond sombre pour les options */
+    color: var(--text-primary);
+}
+
+/* Buttons */
+.btn-accent {
+    background-color: var(--accent-cyan);
+    color: var(--bg-deep);
+    font-weight: 600;
+    border: none;
+    transition: var(--transition-smooth);
+}
+
+.btn-accent:hover {
+    background-color: var(--accent-blue);
+    color: var(--bg-deep);
+    box-shadow: var(--neon-glow);
+}
+
+.btn-glass {
+    background: transparent;
+    border: 1px solid var(--accent-cyan);
+    color: var(--accent-cyan);
+    transition: var(--transition-smooth);
+}
+
+.btn-glass:hover {
+    background: rgba(100, 255, 218, 0.1);
+    color: var(--accent-cyan);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .swiper-slide {
+        width: 250px !important;
+        height: 350px !important;
+    }
+
+    .page-title-glass {
+        font-size: 2rem;
+    }
+}
+
+/* WhatsApp Floating Button */
+.whatsapp-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25d366;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 0px 0px 20px rgba(37, 211, 102, 0.4);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.whatsapp-btn:hover {
+    transform: scale(1.1);
+    background-color: #20ba5a;
+    box-shadow: 0px 0px 30px rgba(37, 211, 102, 0.6);
+    color: white;
+}
+
+.whatsapp-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid #25d366;
+    animation: whatsapp-pulse 2s infinite;
+}
+
+@keyframes whatsapp-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
