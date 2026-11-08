@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/includes/db_connexion.php';
+require_once __DIR__ . '/includes/session_db.php';
 /**
  * Page de déconnexion
  * 

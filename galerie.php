@@ -7,6 +7,7 @@
 
 // Inclure les fichiers nécessaires
 require_once 'includes/db.php';
+require_once 'includes/stockage.php';
 require_once 'includes/fonctions.php';
 
 // Démarrer la session
@@ -29,7 +30,7 @@ try {
         $items = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         $items_valides = [];
         foreach ($items as $item) {
-            if (!empty($item['fichier']) && file_exists(__DIR__ . '/uploads/galerie/' . $item['fichier'])) {
+            if (!empty($item['fichier']) && media_existe('galerie', $item['fichier'], __DIR__)) {
                 $item['categorie_nom'] = $categorie['nom'];
                 $items_valides[] = $item;
                 $toutes_images[] = $item;
@@ -145,7 +146,7 @@ require_once 'includes/header.php';
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 gallery-container">
                     <?php foreach ($toutes_images as $image): ?>
                         <div class="col">
-                            <a href="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
+                            <a href="<?php echo htmlspecialchars(media_url('galerie', $image['fichier'])); ?>" 
                                class="card-glass d-block p-2 h-100 text-decoration-none gallery-item glightbox" 
                                data-gallery="gallery-all"
                                data-type="<?php echo $image['type'] === 'video' ? 'video' : 'image'; ?>"
@@ -155,14 +156,14 @@ require_once 'includes/header.php';
                                 <div style="height: 250px; overflow: hidden; border-radius: 8px; position: relative; background: #0a192f;">
                                     <?php if ($image['type'] === 'video'): ?>
                                         <span class="video-badge"><i class="fas fa-video me-1"></i>Vidéo</span>
-                                        <video src="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>#t=0.5" 
+                                        <video src="<?php echo htmlspecialchars(media_url('galerie', $image['fichier'])); ?>#t=0.5" 
                                                class="w-100 h-100 object-fit-cover preview-video"
                                                muted playsinline preload="metadata"></video>
                                         <div class="position-absolute top-50 start-50 translate-middle text-white pointer-events-none">
                                             <i class="fas fa-play-circle fa-4x" style="opacity: 0.9; color: #64ffda; text-shadow: 0 4px 12px rgba(0,0,0,0.6);"></i>
                                         </div>
                                     <?php else: ?>
-                                        <img src="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
+                                        <img src="<?php echo htmlspecialchars(media_url('galerie', $image['fichier'])); ?>" 
                                              alt="<?php echo htmlspecialchars($image['titre']); ?>"
                                              loading="lazy"
                                              style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;">
@@ -184,7 +185,7 @@ require_once 'includes/header.php';
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 gallery-container">
                         <?php foreach ($categorie['images'] as $image): ?>
                             <div class="col">
-                                <a href="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
+                                <a href="<?php echo htmlspecialchars(media_url('galerie', $image['fichier'])); ?>" 
                                    class="card-glass d-block p-2 h-100 text-decoration-none gallery-item glightbox" 
                                    data-gallery="gallery-cat-<?php echo $categorie['id']; ?>"
                                    data-type="<?php echo $image['type'] === 'video' ? 'video' : 'image'; ?>"
@@ -194,14 +195,14 @@ require_once 'includes/header.php';
                                     <div style="height: 250px; overflow: hidden; border-radius: 8px; position: relative; background: #0a192f;">
                                         <?php if ($image['type'] === 'video'): ?>
                                             <span class="video-badge"><i class="fas fa-video me-1"></i>Vidéo</span>
-                                            <video src="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>#t=0.5" 
+                                            <video src="<?php echo htmlspecialchars(media_url('galerie', $image['fichier'])); ?>#t=0.5" 
                                                    class="w-100 h-100 object-fit-cover preview-video"
                                                    muted playsinline preload="metadata"></video>
                                             <div class="position-absolute top-50 start-50 translate-middle text-white pointer-events-none">
                                                 <i class="fas fa-play-circle fa-4x" style="opacity: 0.9; color: #64ffda; text-shadow: 0 4px 12px rgba(0,0,0,0.6);"></i>
                                             </div>
                                         <?php else: ?>
-                                            <img src="uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
+                                            <img src="<?php echo htmlspecialchars(media_url('galerie', $image['fichier'])); ?>" 
                                                  alt="<?php echo htmlspecialchars($image['titre']); ?>"
                                                  loading="lazy"
                                                  style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;">

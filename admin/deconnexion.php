@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../includes/db_connexion.php';
+require_once __DIR__ . '/../includes/session_db.php';
 session_start();
 // Détruire toutes les variables de session
 $_SESSION = [];

@@ -7,6 +7,7 @@
 
 // Inclure les fichiers nécessaires
 require_once '../includes/db.php';
+require_once '../includes/stockage.php';
 require_once '../includes/fonctions.php';
 
 // Démarrer la session
@@ -209,7 +210,7 @@ require_once '../includes/header.php';
                 <label for="image" class="form-label">Image d'illustration (optionnel)</label>
                 <?php if (!empty($information['image'])): ?>
                     <div class="mb-2">
-                        <img src="../uploads/informations/<?php echo htmlspecialchars($information['image']); ?>" alt="Image actuelle" class="img-thumbnail" style="max-height: 150px;">
+                        <img src="<?php echo htmlspecialchars(media_url('informations', $information['image'], '../')); ?>" alt="Image actuelle" class="img-thumbnail" style="max-height: 150px;">
                         <div class="form-text text-muted">Laissez vide pour conserver l'image actuelle.</div>
                     </div>
                 <?php endif; ?>

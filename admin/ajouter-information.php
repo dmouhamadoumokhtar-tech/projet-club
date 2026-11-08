@@ -5,16 +5,17 @@
  * Permet aux administrateurs d'ajouter un nouvel article d'information
  */
 
-// Inclure les fichiers nécessaires
+// Inclure les fichiers nÃ©cessaires
 require_once '../includes/db.php';
+require_once '../includes/stockage.php';
 require_once '../includes/fonctions.php';
 
-// Démarrer la session
+// DÃ©marrer la session
 session_start();
 
-// Vérifier si l'utilisateur est connecté et est un administrateur
+// VÃ©rifier si l'utilisateur est connectÃ© et est un administrateur
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin' || !isset($_SESSION['admin_id'])) {
-    $_SESSION['message'] = "Vous devez être connecté en tant qu'administrateur pour accéder à cette page.";
+    $_SESSION['message'] = "Vous devez Ãªtre connectÃ© en tant qu'administrateur pour accÃ©der Ã  cette page.";
     $_SESSION['type_message'] = "error";
     rediriger('connexion.php');
 }
@@ -25,9 +26,9 @@ $erreurs = [];
 
 // Traitement du formulaire si soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Récupérer et nettoyer les données du formulaire
+    // RÃ©cupÃ©rer et nettoyer les donnÃ©es du formulaire
     $titre = nettoyer($_POST['titre'] ?? '');
-    $contenu = $_POST['contenu'] ?? ''; // Ne pas nettoyer le contenu pour préserver les sauts de ligne
+    $contenu = $_POST['contenu'] ?? ''; // Ne pas nettoyer le contenu pour prÃ©server les sauts de ligne
     $document_url = nettoyer($_POST['document_url'] ?? '');
     
     // Validation
@@ -51,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $upload_dir = '../uploads/informations/';
         
-        // Créer le dossier s'il n'existe pas
+        // CrÃ©er le dossier s'il n'existe pas
         if (!file_exists($upload_dir)) {
             mkdir($upload_dir, 0777, true);
         }
@@ -60,28 +61,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $file_name = basename($_FILES['image']['name']);
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
         
-        // Extensions autorisées
+        // Extensions autorisÃ©es
         $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         
         if (in_array($file_ext, $allowed)) {
-            // Générer un nom unique
+            // GÃ©nÃ©rer un nom unique
             $new_name = uniqid('info_') . '.' . $file_ext;
             $destination = $upload_dir . $new_name;
             
-            if (move_uploaded_file($file_tmp, $destination)) {
-                $image_nom = $new_name;
+            $img_stockee = $new_name;
+            if (stocker_upload($file_tmp, $destination, $img_stockee)) {
+                $image_nom = $img_stockee;
             } else {
-                $erreurs['image'] = "Erreur lors du téléchargement de l'image.";
+                $erreurs['image'] = "Erreur lors du tÃ©lÃ©chargement de l'image.";
             }
         } else {
-            $erreurs['image'] = "Type de fichier non autorisé. (JPG, PNG, GIF, WEBP uniquement)";
+            $erreurs['image'] = "Type de fichier non autorisÃ©. (JPG, PNG, GIF, WEBP uniquement)";
         }
     }
 
-    // Si pas d'erreurs, enregistrer dans la base de données
+    // Si pas d'erreurs, enregistrer dans la base de donnÃ©es
     if (empty($erreurs)) {
         try {
-            // Préparer et exécuter la requête d'insertion
+            // PrÃ©parer et exÃ©cuter la requÃªte d'insertion
             $stmt = $mysqli->prepare("
                 INSERT INTO informations (titre, contenu, document_url, image, date_publication)
                 VALUES (?, ?, ?, ?, NOW())
@@ -96,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 require_once '../includes/config_mail.php';
                 require_once '../includes/SMTPMailer.php';
                 
-                // 1. Récupérer les emails des membres valides
+                // 1. RÃ©cupÃ©rer les emails des membres valides
                 $res = $mysqli->query("SELECT email FROM membres WHERE statut = 'valide' AND email IS NOT NULL AND email != ''");
                 $emails = [];
                 while ($row = $res->fetch_assoc()) {
@@ -107,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // 2. Configurer le mailer avec les constantes
                     $mailer = new SMTPMailer(SMTP_USER, SMTP_PASS); 
 
-                    // 3. Contenu du mail (Template HTML Stylisé)
+                    // 3. Contenu du mail (Template HTML StylisÃ©)
                     $sujet = "Nouvelle publication : " . $titre;
                     $lien_article = "https://cslmdb.cybibff.site/informations.php?id=" . $new_id;
                     
@@ -134,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <h2 style="color: #e6f1ff; font-size: 20px; margin-top: 0;">Nouvelle Publication ??</h2>
                                     <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">Bonjour,</p>
                                     <p style="font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
-                                        Un nouvel article d\'information vient d\'être publié sur notre plateforme. Voici un aperçu :
+                                        Un nouvel article d\'information vient d\'Ãªtre publiÃ© sur notre plateforme. Voici un aperÃ§u :
                                     </p>
                                     
                                     <div style="background-color: #0a192f; padding: 20px; border-left: 4px solid #64ffda; border-radius: 4px; margin-bottom: 30px;">
@@ -155,8 +157,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <!-- Footer -->
                             <tr>
                                 <td style="padding: 30px; background-color: #0a192f; text-align: center; font-size: 12px; color: #495670; border-top: 1px solid #233554;">
-                                    <p style="margin: 0 0 10px 0;">Club Scientifique Lycée Maba Diakhou Ba</p>
-                                    <p style="margin: 0;">Ceci est un message automatique, merci de ne pas y répondre.</p>
+                                    <p style="margin: 0 0 10px 0;">Club Scientifique LycÃ©e Maba Diakhou Ba</p>
+                                    <p style="margin: 0;">Ceci est un message automatique, merci de ne pas y rÃ©pondre.</p>
                                 </td>
                             </tr>
                         </table>
@@ -176,10 +178,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
             
-            // Message de succès
-            $_SESSION['message'] = "L'article d'information a été ajouté avec succès.";
+            // Message de succÃ¨s
+            $_SESSION['message'] = "L'article d'information a Ã©tÃ© ajoutÃ© avec succÃ¨s.";
             if (isset($_POST['notifier_membres']) && !empty($emails)) {
-                 $_SESSION['message'] .= " (" . count($emails) . " membres notifiés)";
+                 $_SESSION['message'] .= " (" . count($emails) . " membres notifiÃ©s)";
             }
             $_SESSION['type_message'] = "success";
             
@@ -191,17 +193,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Titre de la page pour l'affichage dans l'en-tête
+// Titre de la page pour l'affichage dans l'en-tÃªte
 $titre_page = "Ajouter une information";
 
-// Inclure l'en-tête
+// Inclure l'en-tÃªte
 require_once '../includes/header.php';
 ?>
 
 <div class="d-flex align-items-center justify-content-between mb-4">
     <h1 class="h2 mb-0">Ajouter un article d'information</h1>
     <a href="gestion-informations.php" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-1"></i> Retour à la liste des informations
+        <i class="fas fa-arrow-left me-1"></i> Retour Ã  la liste des informations
     </a>
 </div>
 
@@ -249,7 +251,7 @@ require_once '../includes/header.php';
             <div class="mb-3">
                 <label for="image" class="form-label">Image d'illustration (optionnel)</label>
                 <input type="file" id="image" name="image" class="form-control <?php echo isset($erreurs['image']) ? 'is-invalid' : ''; ?>" accept="image/*">
-                <div class="form-text">Formats acceptés : JPG, PNG, GIF, WEBP.</div>
+                <div class="form-text">Formats acceptÃ©s : JPG, PNG, GIF, WEBP.</div>
                 <?php if (isset($erreurs['image'])): ?>
                     <div class="invalid-feedback">
                         <?php echo $erreurs['image']; ?>
@@ -262,7 +264,7 @@ require_once '../includes/header.php';
                 <label class="form-check-label" for="notifier_membres">
                     <i class="fas fa-bell me-1 text-warning"></i> Notifier tous les membres par email
                 </label>
-                <div class="form-text">Si coché, un email sera envoyé à tous les membres validés.</div>
+                <div class="form-text">Si cochÃ©, un email sera envoyÃ© Ã  tous les membres validÃ©s.</div>
             </div>
             
             <div class="mb-3">

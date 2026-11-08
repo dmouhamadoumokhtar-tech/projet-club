@@ -7,6 +7,7 @@
 
 // Inclure les fichiers nécessaires
 require_once 'includes/db.php';
+require_once 'includes/stockage.php';
 require_once 'includes/fonctions.php';
 
 // Démarrer la session
@@ -69,7 +70,7 @@ require_once 'includes/header.php';
                                 
                                 <?php if (!empty($info['image'])): ?>
                                 <div class="mb-3 rounded overflow-hidden" style="height: 200px;">
-                                    <img src="uploads/informations/<?php echo htmlspecialchars($info['image']); ?>" alt="Illustration" class="w-100 h-100 object-fit-cover">
+                                    <img src="<?php echo htmlspecialchars(media_url('informations', $info['image'])); ?>" alt="Illustration" class="w-100 h-100 object-fit-cover">
                                 </div>
                                 <?php endif; ?>
 
@@ -110,7 +111,7 @@ require_once 'includes/header.php';
             <div class="text-secondary" style="font-size: 1.1rem; line-height: 1.8;">
                 <?php if (!empty($information['image'])): ?>
                 <div class="mb-4 text-center">
-                    <img src="uploads/informations/<?php echo htmlspecialchars($information['image']); ?>" alt="Illustration" class="img-fluid rounded shadow-sm" style="max-height: 400px;">
+                    <img src="<?php echo htmlspecialchars(media_url('informations', $information['image'])); ?>" alt="Illustration" class="img-fluid rounded shadow-sm" style="max-height: 400px;">
                 </div>
                 <?php endif; ?>
 

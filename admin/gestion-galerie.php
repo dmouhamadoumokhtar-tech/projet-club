@@ -7,6 +7,7 @@
 
 // Inclure les fichiers nécessaires
 require_once '../includes/db.php';
+require_once '../includes/stockage.php';
 require_once '../includes/fonctions.php';
 
 // Démarrer la session
@@ -36,9 +37,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
             if ($image) {
                 // Supprimer le fichier physique
                 $chemin_fichier = "../uploads/galerie/" . $image['fichier'];
-                if (file_exists($chemin_fichier)) {
-                    unlink($chemin_fichier);
-                }
+                supprimer_media($chemin_fichier, $image['fichier']);
                 
                 // Supprimer l'entrée de la base de données
                 $stmt = $mysqli->prepare("DELETE FROM galerie WHERE id = ?");
@@ -104,19 +103,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     // Déterminer le type (image ou video)
                     $type = in_array($extension, $types_videos) ? 'video' : 'image';
                     
-                    // Déplacer le fichier uploadé
-                    if (move_uploaded_file($tmp_name, $chemin_fichier)) {
-                        // Insérer dans la base de données
+                    // Stocker le fichier (en local ou sur Vercel Blob)
+                    $fichier_bdd = $nouveau_nom;
+                    if (stocker_upload($tmp_name, $chemin_fichier, $fichier_bdd)) {
+                        // Insérer dans la base de données (fichier_bdd contient le nom ou l'URL Blob)
                         $stmt = $mysqli->prepare("INSERT INTO galerie (titre, description, categorie_id, fichier, type, date_ajout) VALUES (?, ?, ?, ?, ?, NOW())");
-                        $stmt->bind_param("ssiss", $titre, $description, $categorie_id, $nouveau_nom, $type);
+                        $stmt->bind_param("ssiss", $titre, $description, $categorie_id, $fichier_bdd, $type);
                         if ($stmt->execute()) {
                             $fichiers_uploades++;
                         } else {
                             $erreurs_upload[] = "Le fichier '$nom_fichier_original': erreur lors de l'enregistrement dans la base de données.";
-                            // Optionnel: supprimer le fichier si l'insertion DB échoue
-                            if (file_exists($chemin_fichier)) {
-                                unlink($chemin_fichier);
-                            }
+                            supprimer_media($chemin_fichier, $fichier_bdd);
                         }
                     } else {
                         $erreurs_upload[] = "Le fichier '$nom_fichier_original': erreur lors de l'upload.";
@@ -201,9 +198,7 @@ if (isset($_POST['action_categorie'])) {
                 // Supprimer les fichiers physiques
                 while ($image = $result->fetch_assoc()) {
                     $chemin_fichier = "../uploads/galerie/" . $image['fichier'];
-                    if (file_exists($chemin_fichier)) {
-                        unlink($chemin_fichier);
-                    }
+                    supprimer_media($chemin_fichier, $image['fichier']);
                 }
                 
                 // Supprimer les entrées de la base de données
@@ -553,9 +548,9 @@ require_once '../includes/header.php';
                     <?php foreach ($images as $image): ?>
                         <div class="gallery-item">
                             <?php if ($image['type'] === 'video'): ?>
-                                <video src="../uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>#t=0.5" class="object-fit-cover w-100" style="height: 200px; background: #0a192f;" muted playsinline preload="metadata" controls></video>
+                                <video src="<?php echo htmlspecialchars(media_url('galerie', $image['fichier'], '../')); ?>#t=0.5" class="object-fit-cover w-100" style="height: 200px; background: #0a192f;" muted playsinline preload="metadata" controls></video>
                             <?php else: ?>
-                                <img src="../uploads/galerie/<?php echo htmlspecialchars($image['fichier']); ?>" 
+                                <img src="<?php echo htmlspecialchars(media_url('galerie', $image['fichier'], '../')); ?>" 
                                      alt="<?php echo htmlspecialchars($image['titre']); ?>">
                             <?php endif; ?>
                             
