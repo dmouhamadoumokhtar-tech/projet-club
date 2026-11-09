@@ -129,8 +129,9 @@ class SMTPMailer {
     }
 
     private function log($msg) {
-        $logFile = __DIR__ . '/../smtp_debug.log';
-        file_put_contents($logFile, date('[Y-m-d H:i:s] ') . $msg . "\n", FILE_APPEND);
+        $logDir = sys_get_temp_dir();
+        $logFile = $logDir . '/smtp_debug.log';
+        @file_put_contents($logFile, date('[Y-m-d H:i:s] ') . $msg . "\n", FILE_APPEND);
     }
 }
 ?>
